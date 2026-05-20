@@ -488,6 +488,10 @@ std::unique_ptr<llvm::TargetMachine> CodeGenerator::createTargetMachine() {
     auto* targetMachine = target->createTargetMachine(llvm::Triple(targetTriple_), "generic", "", options,
                                                       std::nullopt, std::nullopt,
                                                       llvm::CodeGenOptLevel::Default, false);
+#elif LLVM_VERSION_MAJOR >= 18
+    auto* targetMachine = target->createTargetMachine(targetTriple_, "generic", "", options,
+                                                      std::nullopt, std::nullopt,
+                                                      llvm::CodeGenOptLevel::Default, false);
 #else
     auto* targetMachine = target->createTargetMachine(targetTriple_, "generic", "", options);
 #endif
