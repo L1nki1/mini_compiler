@@ -177,10 +177,29 @@ result: PASSED
 
 1. GitHub repository -> `Code` -> `Codespaces`.
 2. `Create codespace on main`.
-3. После открытия терминала:
+3. После открытия терминала можно сразу скопировать команды ниже.
+
+Проверить все валидные и невалидные тесты:
 
 ```sh
 cmake --build build --target mini-check
+```
+
+Скомпилировать пример `do_while_basic.mc`, слинковать его с `runtime/main.c` и запустить:
+
+```sh
+./build/mini-cc tests/valid/do_while_basic.mc \
+  -o build/do_while_basic.o \
+  --emit-ir build/do_while_basic.ll
+
+cc runtime/main.c build/do_while_basic.o -o build/run_do_while_basic
+./build/run_do_while_basic
+```
+
+Ожидаемый вывод:
+
+```text
+10
 ```
 
 Подробная инструкция: `CODESPACES.md`.
