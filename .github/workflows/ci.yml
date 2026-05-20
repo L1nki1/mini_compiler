@@ -1,0 +1,64 @@
+name: Mini compiler CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and test on Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            flex \
+            bison \
+            llvm-dev \
+            clang \
+            libedit-dev \
+            libzstd-dev \
+            libcurl4-openssl-dev \
+            zlib1g-dev \
+            libffi-dev \
+            libxml2-dev
+
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build compiler
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Run valid/invalid test suite
+        run: cmake --build build --target mini-check
+
+      - name: Compile sample and link runtime
+        run: |
+          ./build/mini-cc tests/valid/do_while_basic.mc \
+            -o build/do_while_basic.o \
+            --emit-ir build/do_while_basic.ll \
+            --target=x86_64-pc-linux-gnu
+
+          cc runtime/main.c build/do_while_basic.o -o build/run_do_while_basic
+          output="$(./build/run_do_while_basic)"
+          echo "runtime output: $output"
+          test "$output" = "10"
+
+      - name: Upload generated artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mini-compiler-ci-artifacts
+          if-no-files-found: ignore
+          path: |
+            build/do_while_basic.o
+            build/do_while_basic.ll
+            build/test-output/

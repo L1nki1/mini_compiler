@@ -1,0 +1,23 @@
+{
+  "name": "Mini Compiler LLVM",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "llvm-vs-code-extensions.vscode-clangd"
+      ],
+      "settings": {
+        "cmake.buildDirectory": "${workspaceFolder}/build",
+        "C_Cpp.default.cppStandard": "c++17"
+      }
+    }
+  },
+  "postCreateCommand": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && cmake --build build -j$(nproc)",
+  "postAttachCommand": "echo 'Mini compiler is ready. Run: cmake --build build --target mini-check'",
+  "remoteUser": "vscode"
+}

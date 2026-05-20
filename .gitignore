@@ -1,0 +1,30 @@
+# CMake/build output
+build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Generated compiler artifacts
+*.o
+*.obj
+*.ll
+*.bc
+*.s
+*.exe
+*.out
+
+# Test output
+test-output/
+mini_compiler_tests/
+
+# Editor/OS temporary files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+~$*
+Thumbs.db
+.DS_Store
